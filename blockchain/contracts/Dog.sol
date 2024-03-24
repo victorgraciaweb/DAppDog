@@ -1,12 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.19;
 
-// Uncomment this line to use console.log
-//import "hardhat/console.sol";
-
-// Import OpenZeppelin
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract Dog is ERC721 {
@@ -18,10 +13,10 @@ contract Dog is ERC721 {
         owner = msg.sender;
     }
 
-    function registerDog(string memory _uuid, string memory _name, string memory _breed, string memory _color) public {
+    function registerDog(string memory _uuid, string memory _name, string memory _breed, string memory _color, bool availableForAdpt) public {
         require(msg.sender == owner, "Only the owner can call this function");
         uint256 newItemId = _tokensIds.current();
-        DogInfo memory dog = DogInfo(newItemId, _uuid, _name, _breed, _color, 1);
+        DogInfo memory dog = DogInfo(newItemId, _uuid, _name, _breed, _color, availableForAdpt);
         dogs.push(dog);
         _safeMint(msg.sender, newItemId);
     }
@@ -37,7 +32,7 @@ contract Dog is ERC721 {
         string name;
         string breed;
         string color;
-        uint8 availableForAdpt;
+        bool availableForAdpt;
     }
 
     // Storage structure for keeping Dogs

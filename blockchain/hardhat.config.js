@@ -4,7 +4,7 @@ require("@nomiclabs/hardhat-waffle");
 //const privateKey = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
-  solidity: "0.8.4",
+  solidity: "0.8.19",
   paths: {
     artifacts: "./artifacts",
     sources: "./contracts",
