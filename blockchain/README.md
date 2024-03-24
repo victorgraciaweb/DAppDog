@@ -1,5 +1,5 @@
-# dapp-marketplace-hardhat
-Dapp developed with Solidity, React, Ganache and Hardhat in Ethereum blockchain
+# DAppDog
+DApp developed with solidity in Ethereum blockchain 
 
 ### 1. Install Dependencies:
 `$ npm install`
