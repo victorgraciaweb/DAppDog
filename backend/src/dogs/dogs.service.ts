@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Body } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import Web3 from 'web3';
 
@@ -9,58 +9,105 @@ import { address } from '../contracts/Dog-address.json';
 
 @Injectable()
 export class DogsService {
-  private dogs: Dog[] = [];
 
   create(createDogDto: CreateDogDto) {
-    const dog = new Dog(
-      uuid(),
-      createDogDto.name,
-      createDogDto.alias,
-      createDogDto.breed,
-      createDogDto.color,
-      true,
-    );
-
-    this.dogs.push(dog);
-
-    return dog;
-  }
-
-  findAll() {
     const web3 = new Web3(
       new Web3.providers.HttpProvider('http://localhost:7545')
     );
 
     const contract = new web3.eth.Contract(abi, address);
 
-    async function interactWithContract() {
+    const id: string = uuid();
+
+    const dog = new Dog(
+      id,
+      createDogDto.name,
+      createDogDto.breed,
+      createDogDto.color,
+      true
+    );
+
+    async function createDog() {
       try {
-        const result = await contract.methods.name().call();
-        console.log('Resultado:', result);
+        const result = await contract.methods.registerDog(id, dog.name, dog.breed, dog.color).call({ from: '0x1B5CbA8DC580C81deF7568EbAEBA9DA72beb9D4D' });
+        const tokensCreados = await contract.methods.totalSupply().call();
+
+        console.log('Tokens creados:', tokensCreados);
       } catch (error) {
         console.error('Error al interactuar con el contrato:', error);
       }
     }
 
-    interactWithContract();
-
-    return this.dogs;
-  }
-
-  /*async getBalance() {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider('http://localhost:8545')
-    );
-
-    const balance = await web3.eth.getBalance('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-    return balance;
-  }*/
-
-  findOne(id: string) {
-    const dog = this.dogs.find(dog => dog.id === id);
-    if (!dog) throw new NotFoundException(`Dog with id '${id}' not found`);
+    createDog();
 
     return dog;
+  }
+
+
+
+
+
+  async findAll(): Promise<Dog> {
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider('http://localhost:7545')
+    );
+
+    const contract = new web3.eth.Contract(abi, address);
+
+    try {
+      // Llama a un método del contrato
+      const result = await contract.methods.findDog('xxxxxx').call();
+      
+      // Formatea los datos obtenidos del contrato para que coincidan con la estructura de un "dog"
+      const dog = new Dog(
+        result['uuid'],
+        result['name'],
+        result['breed'],
+        result['color'],
+        result['availableForAdpt']
+      );
+
+      return dog;
+    } catch (error) {
+      console.error('Error al interactuar con el contrato:', error);
+      throw error;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+  async findOne(id: string) {
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider('http://localhost:7545')
+    );
+
+    const contract = new web3.eth.Contract(abi, address);
+
+    try {
+      // Llama a un método del contrato
+      const result = await contract.methods.findDog(id).call();
+      
+      // Formatea los datos obtenidos del contrato para que coincidan con la estructura de un "dog"
+      const dog = new Dog(
+        result['uuid'],
+        result['name'],
+        result['breed'],
+        result['color'],
+        result['availableForAdpt']
+      );
+
+      return dog;
+    } catch (error) {
+      console.error('Error al interactuar con el contrato:', error);
+      throw error;
+    }
   }
 
   /*adopt(id: number) {

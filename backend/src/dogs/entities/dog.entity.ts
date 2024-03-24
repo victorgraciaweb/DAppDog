@@ -1,24 +1,21 @@
 export class Dog {
     readonly id: string;
-    readonly alias: string;
     readonly name: string;
     readonly breed: string;
     readonly color: string;
-    readonly available: boolean;
+    readonly availableForAdpt: boolean
 
     constructor(
         id: string, 
-        alias: string, 
         name: string, 
         breed: string, 
         color: string,
-        available: boolean) 
+        availableForAdpt: boolean) 
     {
         this.id = id;
-        this.alias = alias;
         this.name = name;
         this.breed = breed;
         this.color = color;
-        this.available = available;
+        this.availableForAdpt = availableForAdpt;
     }
 }
