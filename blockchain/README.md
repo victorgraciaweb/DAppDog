@@ -1,5 +1,5 @@
 # DAppDog
-DApp developed with solidity in Ethereum blockchain 
+Smart Contract developed with solidity in Ethereum blockchain 
 
 ### 1. Install Dependencies:
 `$ npm install`
