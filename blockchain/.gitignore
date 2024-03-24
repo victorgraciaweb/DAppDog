@@ -1,0 +1,6 @@
+.idea
+.secret
+/build
+/node_modules
+/artifacts
+/cache
