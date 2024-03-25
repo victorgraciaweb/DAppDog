@@ -9,8 +9,8 @@ import { address } from '../contracts/Dog-address.json';
 
 @Injectable()
 export class DogsService {
-
-  create(createDogDto: CreateDogDto) {
+  async create(createDogDto: CreateDogDto): Promise<Dog> {
+    
     const web3 = new Web3(
       new Web3.providers.HttpProvider('http://localhost:7545')
     );
@@ -27,25 +27,15 @@ export class DogsService {
       true
     );
 
-    async function createDog() {
-      try {
-        const result = await contract.methods.registerDog(id, dog.name, dog.breed, dog.color).call({ from: '0x1B5CbA8DC580C81deF7568EbAEBA9DA72beb9D4D' });
-        const tokensCreados = await contract.methods.totalSupply().call();
+    try {
+      const result = await contract.methods.registerDog(id, dog.name, dog.breed, dog.color, dog.availableForAdpt).send({ from: '0xda50f755351cB8977Aff1b3A82a0630BEB1e9da4', gas: '500000' });
 
-        console.log('Tokens creados:', tokensCreados);
-      } catch (error) {
-        console.error('Error al interactuar con el contrato:', error);
-      }
+      return dog;
+    } catch (error) {
+      console.error('Error al interactuar con el contrato:', error);
+      throw error;
     }
-
-    createDog();
-
-    return dog;
   }
-
-
-
-
 
   async findAll(): Promise<Dog> {
     const web3 = new Web3(
@@ -56,7 +46,7 @@ export class DogsService {
 
     try {
       // Llama a un método del contrato
-      const result = await contract.methods.findDog('xxxxxx').call();
+      const result = await contract.methods.findDog('493eeeac-1a0d-4a4d-871f-751b33711e07').call();
       
       // Formatea los datos obtenidos del contrato para que coincidan con la estructura de un "dog"
       const dog = new Dog(
@@ -73,15 +63,6 @@ export class DogsService {
       throw error;
     }
   }
-
-
-
-
-
-
-
-
-
 
   async findOne(id: string) {
     const web3 = new Web3(
