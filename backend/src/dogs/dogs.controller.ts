@@ -11,18 +11,8 @@ export class DogsController {
     return this.dogsService.create(createDogDto);
   }
 
-  @Get()
-  findAll() {
-    return this.dogsService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.dogsService.findOne(id);
   }
-
-  /*@Get(':id/adopt')
-  adopt(@Param('id') id: string) {
-    return this.dogsService.findOne(+id);
-  }*/
 }
